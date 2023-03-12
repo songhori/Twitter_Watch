@@ -314,14 +314,6 @@ MarkupSafe = ">=2.0"
 i18n = ["Babel (>=2.7)"]
 
 [[package]]
-name = "joblib"
-version = "1.2.0"
-description = "Lightweight pipelining with Python functions"
-category = "main"
-optional = false
-python-versions = ">=3.7"
-
-[[package]]
 name = "lxml"
 version = "4.9.2"
 description = "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API."
@@ -350,28 +342,6 @@ description = "multidict implementation"
 category = "main"
 optional = false
 python-versions = ">=3.7"
-
-[[package]]
-name = "nltk"
-version = "3.8.1"
-description = "Natural Language Toolkit"
-category = "main"
-optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-click = "*"
-joblib = "*"
-regex = ">=2021.8.3"
-tqdm = "*"
-
-[package.extras]
-all = ["scikit-learn", "python-crfsuite", "requests", "numpy", "pyparsing", "twython", "scipy", "matplotlib"]
-corenlp = ["requests"]
-machine_learning = ["numpy", "python-crfsuite", "scikit-learn", "scipy"]
-plot = ["matplotlib"]
-tgrep = ["pyparsing"]
-twitter = ["twython"]
 
 [[package]]
 name = "numpy"
@@ -732,17 +702,6 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
-name = "textblob"
-version = "0.17.1"
-description = "Simple, Pythonic text processing. Sentiment analysis, part-of-speech tagging, noun phrase parsing, and more."
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-nltk = {version = ">=3.1", markers = "python_version >= \"3\""}
-
-[[package]]
 name = "tokenizers"
 version = "0.13.2"
 description = "Fast and Customizable Tokenizers"
@@ -936,7 +895,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10.0,<3.11"
-content-hash = "0a75aee688e513298dc19b08e31d3279c98c1249d7b5084b685a8791bc226a04"
+content-hash = "59e46f2ca14d48ac5b1a3ce5a2722d671ca0e111d0789493be23d0790fa4376c"
 
 [metadata.files]
 aiohttp = []
@@ -963,11 +922,9 @@ iso8601 = []
 itsdangerous = []
 jedi = []
 jinja2 = []
-joblib = []
 lxml = []
 markupsafe = []
 multidict = []
-nltk = []
 numpy = []
 packaging = []
 pandas = []
@@ -996,7 +953,6 @@ six = []
 smart-open = []
 snscrape = []
 soupsieve = []
-textblob = []
 tokenizers = []
 toml = []
 tomli = []

@@ -7,10 +7,10 @@ import json
 
 app = Flask(__name__)
 
-# users = ['alikarimi_ak8', 'elonmusk', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
-users = ['BarackObama', 'ylecun', 'taylorlorenz']
-until = "2023-03-10"
-since = "2023-02-01"
+users = ['alikarimi_ak8', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
+# users = ['BarackObama', 'ylecun', 'taylorlorenz']
+until = "2023-03-11"
+since = "2023-03-10"
 
 
 def clear_text(text):
@@ -28,10 +28,8 @@ def get_Content(query):
   # print (Discription)
   # df['user'] = df['user'].apply(lambda x: x['users'])
   result = df['rawContent'].apply(lambda x: clear_text(x))
-  separator = '. '
-  result = separator.join(list(result))
+  result = '\n'.join(list(result))
   return result
-
 
 
 def get_data(query):
@@ -42,47 +40,42 @@ def get_data(query):
   return df
 
 
-
 # Sentiment Analysis
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
 analyzer = SentimentIntensityAnalyzer()
 
-
-query = [""] * len(users)
-rquery = [""] * len(users)
 Tweets = [""] * len(users)
 Replies = [""] * len(users)
 sentiment_tw = [""] * len(users)
 sentiment_rp = [""] * len(users)
 count = [""] * len(users)
 for i in range(len(users)):
-  query[i] = "(from:" + users[
-    i] + ") until:" + until + " since:" + since + " -filter"
-  Tweets[i] = get_Content(query[i])
-  rquery[i] = "(to:" + users[i] + ") until:" + until + " since:" + since
-  Replies[i] = get_Content(rquery[i])
+  query = "(from:" + users[i] + ") until:" + until + " since:" + since + " -filter:replies"
+  Tweets[i] = get_Content(query)
+  rquery = "(to:" + users[i] + ") until:" + until + " since:" + since
+  Replies[i] = get_Content(rquery)
   sentiment_tw[i] = analyzer.polarity_scores(Tweets[i])
   sentiment_rp[i] = analyzer.polarity_scores(Replies[i])
   # print(sentiment_tw[2])
-  rdf = get_data(rquery[i])
+  rdf = get_data(rquery)
   count[i] = Counter(rdf['user']).most_common(5)
+
+
   
-
-
-
-
 # summerise the tweet method 2:
 # import necessary modules
-import nltk
-nltk.download('stopwords')
-nltk.download('punkt')
+# import nltk
+
+# nltk.download('stopwords')
+# nltk.download('punkt')
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.probability import FreqDist
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from heapq import nlargest
 
-i=0
+i = 0
 text = Tweets[i]
 
 # tokenize the sentences and words in text
@@ -91,7 +84,9 @@ words = word_tokenize(text)
 
 # remove stopwords and stem remaining words
 stop_words = set(stopwords.words('english'))
-filtered_words = [PorterStemmer().stem(w.lower()) for w in words if not w in stop_words]
+filtered_words = [
+  PorterStemmer().stem(w.lower()) for w in words if not w in stop_words
+]
 
 # calculate word frequency
 freq_dist = FreqDist(filtered_words)
@@ -100,14 +95,12 @@ top_words = nlargest(2, freq_dist, key=freq_dist.get)
 # summarize the text with top sentences that contain the most important words
 summary = []
 for sentence in sentences:
-    if any(word in sentence.lower() for word in top_words):
-        summary.append(sentence)
+  if any(word in sentence.lower() for word in top_words):
+    summary.append(sentence)
 
 # output the summary
 print('Summary:')
 print('\n'.join(summary))
-
-
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -116,7 +109,7 @@ def index():
     username = request.form['selected_value']
     # print(username)
     # tweets:
-    query = "(from:" + username + ") since:" + until + " -filter"
+    query = "(from:" + username + ") since:" + until + " -filter:replies"
     newtweets = get_Content(query)
     alltweets = newtweets + Tweets[users.index(username)]
 
@@ -124,32 +117,33 @@ def index():
     rquery = "(to:" + username + ") since:" + until
     newreplies = get_Content(rquery)
     allreplies = newreplies + Replies[users.index(username)]
-    a = list(sentiment_rp[users.index(username)])
-    b = list(sentiment_tw[users.index(username)])
-    return render_template('index.html', tweets=alltweets, replies=allreplies, description='\n'.join(summary), sentiment=sentiment_rp, counter=count[users.index(username)])
+    # a = list(sentiment_rp[users.index(username)])
+    # b = list(sentiment_tw[users.index(username)])
+    return render_template('index.html',
+                           tweets=alltweets,
+                           replies=allreplies,
+                           description='\n'.join(summary),
+                           sentiment=sentiment_rp,
+                           counter=count[users.index(username)])
 
   else:
     return render_template('index.html', tweets="", replies="")
 
 
-
-
 @app.route('/accounts/')
 def get_accounts():
-    # get list of accounts
-    accounts = users
-    # code to get accounts
-    return json.dumps(accounts)
-
-
+  # get list of accounts
+  accounts = users
+  # code to get accounts
+  return json.dumps(accounts)
 
 
 @app.route('/accounts/<username>/tweets')
 def tweet(username):
-   query = "(from:" + username + ") since:" + until + " -filter"
-   newtweets = get_Content(query)
-   alltweets = newtweets + Tweets[users.index(username)]
-   return json.dumps(alltweets)
+  query = "(from:" + username + ") since:" + until + " -filter:replies"
+  newtweets = get_Content(query)
+  alltweets = newtweets + Tweets[users.index(username)]
+  return json.dumps(alltweets)
 
 
 @app.route('/accounts/<username>/audience')
@@ -168,7 +162,6 @@ def mycount(username):
   return answer
 
 
-
 @app.route('/accounts/<username>/sentiment')
 def sentiment(username):
   answer = json.dumps(sentiment_tw[users.index(username)])
@@ -179,8 +172,6 @@ def sentiment(username):
 def sentiment2(username):
   answer = json.dumps(sentiment_rp[users.index(username)])
   return answer
-
-
 
 
 if __name__ == '__main__':
