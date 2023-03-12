@@ -1,5 +1,6 @@
 import snscrape.modules.twitter as sntwitter
 import pandas as pd
+from summarise import summarise
 from collections import Counter
 from flask import Flask, render_template, request
 import re
@@ -62,45 +63,6 @@ for i in range(len(users)):
   count[i] = Counter(rdf['user']).most_common(5)
 
 
-  
-# summerise the tweet method 2:
-# import necessary modules
-# import nltk
-
-# nltk.download('stopwords')
-# nltk.download('punkt')
-from nltk.tokenize import sent_tokenize, word_tokenize
-from nltk.probability import FreqDist
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
-from heapq import nlargest
-
-i = 0
-text = Tweets[i]
-
-# tokenize the sentences and words in text
-sentences = sent_tokenize(text)
-words = word_tokenize(text)
-
-# remove stopwords and stem remaining words
-stop_words = set(stopwords.words('english'))
-filtered_words = [
-  PorterStemmer().stem(w.lower()) for w in words if not w in stop_words
-]
-
-# calculate word frequency
-freq_dist = FreqDist(filtered_words)
-top_words = nlargest(2, freq_dist, key=freq_dist.get)
-
-# summarize the text with top sentences that contain the most important words
-summary = []
-for sentence in sentences:
-  if any(word in sentence.lower() for word in top_words):
-    summary.append(sentence)
-
-# output the summary
-print('Summary:')
-print('\n'.join(summary))
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -122,7 +84,8 @@ def index():
     return render_template('index.html',
                            tweets=alltweets,
                            replies=allreplies,
-                           description='\n'.join(summary),
+                           # description='\n'.join(summary),
+                           description="",
                            sentiment=sentiment_rp,
                            counter=count[users.index(username)])
 
