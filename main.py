@@ -11,7 +11,7 @@ app = Flask(__name__)
 # users = ['alikarimi_ak8', 'elonmusk', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
 users = ['alikarimi_ak8', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
 until = "2023-03-12"
-since = "2023-03-10"
+since = "2023-03-01"
 
 
 def get_data(query):
@@ -114,7 +114,7 @@ def reply(username):
   return json.dumps(allreplies)
 
 
-@app.route('/accounts/<username>/active_users')
+@app.route('/accounts/<username>/counter')
 def mycount(username):
   rquery = "(to:" + username + ") since:" + since
   rdf = get_rdata(rquery)
