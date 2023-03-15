@@ -9,7 +9,7 @@ from sentiment import sentiment_analyzer
 app = Flask(__name__)
 
 # users = ['alikarimi_ak8', 'elonmusk', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
-users = ['taylorlorenz', 'cathiedwood', 'ylecun']
+users = ['alikarimi_ak8','taylorlorenz', 'ylecun']
 until = "2023-03-14"
 since = "2023-02-01"
 
@@ -24,6 +24,15 @@ def get_rdata(rquery):
     data = sntwitter.TwitterSearchScraper(rquery).get_items()
     rdf = pd.DataFrame(data, columns=['date', 'user', 'rawContent', 'inReplyToTweetId'])
     return rdf
+
+
+def check_polarity(num):
+    if num <= -.5:
+       return 'Negative'
+    elif num >= .5:
+       return 'Positive'
+    else:
+       return 'Neutral'
 
 
 df_tw = [""] * len(users)
@@ -46,11 +55,15 @@ str_Replies = [""] * len(users)
 str_sentiment_tw = [""] * len(users)
 str_sentiment_rp = [""] * len(users)
 userrow = [""] * len(users)
+sentiment_decision = [""] * len(users) 
 for i in range(len(users)):
     Tweets[i] = df_tw[i]['rawContent']
     Replies[i] = df_rp[i]['rawContent']
     sentiment_tw[i] = Tweets[i].apply(lambda x: sentiment_analyzer(x))
     sentiment_rp[i] = Replies[i].apply(lambda x: sentiment_analyzer(x))
+    whole_sentiment = list(sentiment_tw[i]) + list(sentiment_rp[i])
+    mean_metric = sum(d['metric'] for d in whole_sentiment)/len(whole_sentiment)
+    sentiment_decision[i] = "Sentiment of the whole Account is " + check_polarity(mean_metric) + " with metric " + "{:.2f}".format(mean_metric)
     str_sentiment_tw[i] = sentiment_tw[i].to_string(index=False, header=False)
     str_sentiment_rp[i] = sentiment_rp[i].to_string(index=False, header=False)
     userrow[i] = df_rp[i]['user'].apply(lambda x: x['username'])
@@ -82,6 +95,7 @@ def index():
                               description=description[users.index(username)],
                               tw_sentiment=str_sentiment_tw[users.index(username)],
                               rp_sentiment=str_sentiment_rp[users.index(username)],
+                              sent_deci=sentiment_decision[users.index(username)],
                               active=active_user[users.index(username)])
   
     else:
