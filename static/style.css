@@ -10,40 +10,36 @@ header {
 	align-items: center;
 	justify-content: center;
 	padding: 10px;
-  }
-  
-  .header-content {
+}
+
+.header-content {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-  }
+}
 
 nav {
 	background-color: #56b0ed;
-	padding: 10px;
+	padding: 5px;
 }
 
 ul {
+	gap: 3px;
+	font-size: large;
+	font-weight: bold;
+	align-items: end;
+	justify-content: center;
 	list-style-type: none;
 	margin: 0;
-	margin-left: 9px;
-	padding: 0;
+	padding: 10px;
 	display: flex;
 	flex-wrap: wrap;
 }
 
 li {
 	margin: 5px;
+	color: #0a1960;
 }
-
-.Table-Title {
-	margin-left: 40px;
-	font-size: large;
-	font-weight: bold;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-  }
 
 li a {
 	display: block;
@@ -61,52 +57,69 @@ li a:hover {
 }
 
 main {
-	/* margin: 20px; */
 	background-color: #c3e6fc;
-	height: 100vh;
+	height: auto;
 }
 
 .container {
 	margin-left: 50px;
 	display: flex;
 	justify-content: space-between;
-  }
-  
-  .left {
-	width: 70%;
-  }
-  
-  .right {
-	width: 70%;
-  }
-  
-  textarea {
-	display: block; 	
-	margin-bottom: 0px; 	
-	width: 90%; 	
-	font-family: 'Helvetica Neue'; 	
-	font-size: 14px; 	
-	line-height: 1.5; 	
-	padding: 10px; 	
-	border: 1px solid #ccc; 	
-	border-radius: 4px;
-  }
-  
+}
 
+.left {
+	width: 70%;
+}
+
+.right {
+	width: 70%;
+}
+
+textarea {
+	display: block;
+	margin-bottom: 40px;
+	width: 90%;
+	font-family: 'Helvetica Neue';
+	font-size: 14px;
+	line-height: 1.5;
+	text-align: left;
+	padding: 10px;
+	border: 1px solid #b2b4b8;
+	border-radius: 4px;
+	box-shadow: 0px 0px 5px #5aa9e1;
+}
+
+textarea:focus {
+	outline: none;
+	box-shadow: 0 0 15px #377cc5;
+  }
 
 button {
 	display: block;
 	padding: 5px 10px;
 	background-color: #fff;
-	color: #1da1f2;
+	color: #1b31bc;
+	font-family: serif;
+	font-size: medium;
 	border: 1px solid #1da1f2;
 	border-radius: 5px;
 	text-decoration: none;
-  cursor: pointer;
+	cursor: pointer;
+	box-shadow: 0px 0px 5px #0d5eaf;
 }
-
 
 button:hover {
 	background-color: #1da1f2;
 	color: #fff;
+}
+
+button:active {
+	background-color: #1b31bc;
+	color: #fff;
+	box-shadow: 0px 0px 5px #a3b9db;
+}
+
+h2 {
+	color: #0a1960;
+	font-size: 20px;
 }

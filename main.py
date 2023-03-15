@@ -9,9 +9,9 @@ from sentiment import sentiment_analyzer
 app = Flask(__name__)
 
 # users = ['alikarimi_ak8', 'elonmusk', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
-users = ['alikarimi_ak8','taylorlorenz', 'ylecun']
-until = "2023-03-14"
-since = "2023-02-01"
+users = ['taylorlorenz', 'cathiedwood', 'ylecun']
+until = "2023-03-15"
+since = "2023-02-15"
 
 
 def get_data(query):
