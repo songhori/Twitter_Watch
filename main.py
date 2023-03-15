@@ -9,9 +9,9 @@ from sentiment import sentiment_analyzer
 app = Flask(__name__)
 
 # users = ['alikarimi_ak8', 'elonmusk', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
-users = ['alikarimi_ak8', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
+users = ['taylorlorenz', 'cathiedwood', 'ylecun']
 until = "2023-03-14"
-since = "2023-03-10"
+since = "2023-02-01"
 
 
 def get_data(query):
@@ -80,7 +80,8 @@ def index():
                               tweets=alltweets,
                               replies=allreplies,
                               description=description[users.index(username)],
-                              sentiment=str_sentiment_rp[users.index(username)],
+                              tw_sentiment=str_sentiment_tw[users.index(username)],
+                              rp_sentiment=str_sentiment_rp[users.index(username)],
                               active=active_user[users.index(username)])
   
     else:
@@ -116,13 +117,13 @@ def mycount(username):
 
 @app.route('/accounts/<username>/sentiment')
 def sentiment(username):
-    answer = json.dumps(sentiment_tw[users.index(username)])
+    answer = json.dumps(list(sentiment_tw[users.index(username)]))
     return answer
 
 
 @app.route('/accounts/<username>/audience/sentiment')
 def sentiment2(username):
-    answer = json.dumps(sentiment_rp[users.index(username)])
+    answer = json.dumps(list(sentiment_rp[users.index(username)]))
     return answer
 
 

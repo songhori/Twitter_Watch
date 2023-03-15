@@ -20,9 +20,9 @@
 		<form method="POST">
 			<ul>
 				<li class="Table-Title">Select Twitter Account:</li>
-				<li><button type="submit" name="selected_value" value="alikarimi_ak8">alikarimi_ak8</button></li>
-				<li><button type="submit" name="selected_value" value="elonmusk">elonmusk</button></li>
-				<li><button type="submit" name="selected_value" value="BarackObama">BarackObama</button></li>
+<!-- 				<li><button type="submit" name="selected_value" value="alikarimi_ak8">alikarimi_ak8</button></li> -->
+<!-- 				<li><button type="submit" name="selected_value" value="elonmusk">elonmusk</button></li> -->
+<!-- 				<li><button type="submit" name="selected_value" value="BarackObama">BarackObama</button></li> -->
 				<li><button type="submit" name="selected_value" value="taylorlorenz">taylorlorenz</button></li>
 				<li><button type="submit" name="selected_value" value="cathiedwood">cathiedwood</button></li>
 				<li><button type="submit" name="selected_value" value="ylecun">ylecun</button></li>
@@ -34,17 +34,19 @@
 		<div class="container">
 			<div class="left">
 				<h2>Tweets:</h2> 		
-				<textarea rows="5" cols="40">{{ tweets }}</textarea> 		
-				<h2>Active audiences:</h2> 		
-				<textarea rows="5" cols="40">{{ active }}</textarea> 		
-				<h2>Sentiments:</h2> 		
-				<textarea rows="5" cols="40">{{ sentiment }}</textarea> 	
+				<textarea rows="5" cols="40">{{ tweets }}</textarea> 	
+        <h2>Tweet Sentiments:</h2> 		
+				<textarea rows="5" cols="40">{{ tw_sentiment }}</textarea> 
+				<h2>Page Description:</h2>  		
+				<textarea rows="5" cols="40">{{ description }}</textarea> 			
 			</div>
 			<div class="right">
 				<h2>Replies:</h2>
 				<textarea rows="5" cols="40">{{ replies }}</textarea>
-				<h2>Page description:</h2>  		
-				<textarea rows="5" cols="40">{{ description }}</textarea> 
+        <h2>Audience Sentiments:</h2>
+				<textarea rows="5" cols="40">{{ rp_sentiment }}</textarea>
+				<h2>Active Audiences:</h2> 		
+				<textarea rows="5" cols="40">{{ active }}</textarea> 
 			</div>
 		</div>   
 	</main>
