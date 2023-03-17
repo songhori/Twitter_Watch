@@ -12,27 +12,20 @@ app = Flask(__name__)
 # users = ['alikarimi_ak8', 'elonmusk', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
 users = ['taylorlorenz', 'cathiedwood', 'ylecun']
 until = "2023-03-16"
-since = "2023-02-01"
+since = "2023-03-01"
 
 
-
-cache = {}
 
 def get_data(query):
-    if query in cache:
-        return cache[query]
     data = sntwitter.TwitterSearchScraper(query).get_items()
     df = pd.DataFrame(data, columns=['date', 'user', 'rawContent', 'id'])
-    cache[query] = df
     return df
 
 def get_rdata(rquery):
-    if rquery in cache:
-        return cache[rquery]
     data = sntwitter.TwitterSearchScraper(rquery).get_items()
     rdf = pd.DataFrame(data, columns=['date', 'user', 'rawContent', 'inReplyToTweetId'])
-    cache[rquery] = rdf
     return rdf
+
 
 
 df_tw = [get_data(f"(from:{user}) until:{until} since:{since} -filter:replies") for user in users]
