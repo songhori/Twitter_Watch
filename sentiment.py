@@ -1,6 +1,7 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import re
 
+analyzer = SentimentIntensityAnalyzer()
 
 def clear_text(text):
     # Use re.sub() to replace all mentions with an empty string
@@ -18,7 +19,6 @@ def check_polarity(num):
 
 def sentiment_analyzer(text):
     cleaned_text = clear_text(text)
-    analyzer = SentimentIntensityAnalyzer()
     metric = analyzer.polarity_scores(cleaned_text)['compound']
     polarity = check_polarity(metric)
     result = {'polarity': polarity, 'metric':metric}
