@@ -2,7 +2,7 @@ import snscrape.modules.twitter as sntwitter
 import pandas as pd
 from summarise import summarise
 from collections import Counter
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import json
 from sentiment import sentiment_analyzer
 from sentiment import check_polarity
@@ -11,8 +11,8 @@ app = Flask(__name__)
 
 # users = ['alikarimi_ak8', 'elonmusk', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
 users = ['taylorlorenz', 'cathiedwood', 'ylecun']
-until = "2023-03-16"
-since = "2023-03-01"
+until = "2023-03-21"
+since = "2023-02-01"
 
 
 
@@ -50,35 +50,35 @@ description = [summarise(tweet) for tweet in str_Tweets]
 
 
 
-
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def index():
-    if request.method == 'POST':
-        username = request.form['selected_value']
-        user_index = users.index(username)
-
-        # tweets:
-        query = f"(from:{username}) since:{until} -filter:replies"
-        newtweets = get_data(query)['rawContent']
-        alltweets = '\n'.join(newtweets) + str_Tweets[user_index]
-
-        # replies:
-        rquery = f"(to:{username}) since:{until}"
-        newreplies = get_rdata(rquery)['rawContent']
-        allreplies = '\n'.join(newreplies) + str_Replies[user_index]
-
-        return render_template('index.html',
-                               tweets=alltweets,
-                               replies=allreplies,
-                               description=description[user_index],
-                               tw_sentiment=str_sentiment_tw[user_index],
-                               rp_sentiment=str_sentiment_rp[user_index],
-                               sent_deci=sentiment_decision[user_index],
-                               active=active_user[user_index])
-    else:
-       return render_template('index.html')
+    return render_template('index.html')
 
 
+@app.route('/process', methods=['POST'])
+def process():
+    username = request.form['selected_value']
+    user_index = users.index(username)
+
+    # tweets:
+    query = f"(from:{username}) since:{until} -filter:replies"
+    newtweets = get_data(query)['rawContent']
+    alltweets = '\n'.join(newtweets) + str_Tweets[user_index]
+    # replies:
+    rquery = f"(to:{username}) since:{until}"
+    newreplies = get_rdata(rquery)['rawContent']
+    allreplies = '\n'.join(newreplies) + str_Replies[user_index]
+
+    # Return a JSON response containing the data
+    return jsonify({
+        'tweets': alltweets,
+        'replies': allreplies,
+        'description': description[user_index],
+        'tw_sentiment': str_sentiment_tw[user_index],
+        'rp_sentiment': str_sentiment_rp[user_index],
+        'sent_deci': sentiment_decision[user_index],
+        'active': active_user[user_index]
+    })
 
 
 @app.route('/accounts/')
