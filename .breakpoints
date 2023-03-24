@@ -1,11 +1,11 @@
 {
   "files": {
-    "static/script.js": [
+    "static/style.css": [
       {
-        "id": "7bef8bff-5fc0-4e76-a430-a12ff3ff3548",
-        "line": 14,
-        "version": 218,
-        "index": 367
+        "id": "2bc68099-ad54-4c47-b0f9-3de27f3c45a8",
+        "line": 2,
+        "version": 80,
+        "index": 7
       }
     ]
   }

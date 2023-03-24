@@ -1,53 +1,35 @@
-import snscrape.modules.twitter as sntwitter
-import pandas as pd
-from summarise import summarise
 from collections import Counter
 from flask import Flask, render_template, request, jsonify
 import json
-from sentiment import sentiment_analyzer
+import redis
 from sentiment import check_polarity
+from database import set_database
+
+
 
 app = Flask(__name__)
 
-# users = ['alikarimi_ak8', 'elonmusk', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
-users = ['taylorlorenz', 'cathiedwood', 'ylecun']
-until = "2023-03-21"
-since = "2023-02-01"
+users = ['alikarimi_ak8', 'elonmusk', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
+# users = ['elonmusk']
 
 
-
-def get_data(query):
-    data = sntwitter.TwitterSearchScraper(query).get_items()
-    df = pd.DataFrame(data, columns=['date', 'user', 'rawContent', 'id'])
-    return df
-
-def get_rdata(rquery):
-    data = sntwitter.TwitterSearchScraper(rquery).get_items()
-    rdf = pd.DataFrame(data, columns=['date', 'user', 'rawContent', 'inReplyToTweetId'])
-    return rdf
+r = redis.Redis(
+  host='redis-17081.c299.asia-northeast1-1.gce.cloud.redislabs.com',
+  port=17081,
+  password='q9726o8N7dBNpYQLoEsAOvVehvW7q1cj',
+  decode_responses=True)
 
 
+# keys_to_delete = r.keys("elonmusk:*")
+# if len(keys_to_delete) > 0:
+#     r.delete(*keys_to_delete)
 
-df_tw = [get_data(f"(from:{user}) until:{until} since:{since} -filter:replies") for user in users]
-df_rp = [get_rdata(f"(to:{user}) until:{until} since:{since}") for user in users]
 
-
-
-Tweets = [df['rawContent'] for df in df_tw]
-Replies = [df['rawContent'] for df in df_rp]
-sentiment_tw = [tweet.apply(lambda x: sentiment_analyzer(x)) for tweet in Tweets]
-sentiment_rp = [reply.apply(lambda x: sentiment_analyzer(x)) for reply in Replies]
-whole_sentiment = [list(sentiments_tw) + list(sentiments_rp) for sentiments_tw, sentiments_rp in zip(sentiment_tw, sentiment_rp)]
-mean_metric = [sum(d['metric'] for d in sentiments)/len(sentiments) for sentiments in whole_sentiment]
-sentiment_decision = [f"Sentiment of the whole Account is {check_polarity(metric)} with metric {metric:.2f}" for metric in mean_metric]
-str_sentiment_tw = [sentiment.to_string(index=False, header=False) for sentiment in sentiment_tw]
-str_sentiment_rp = [sentiment.to_string(index=False, header=False) for sentiment in sentiment_rp]
-userrow = [df['user'].apply(lambda x: x['username']) for df in df_rp]
-active_user = [Counter(row).most_common(5) for row in userrow]
-str_Tweets = ['\n'.join(list(tweet)) for tweet in Tweets]
-str_Replies = ['\n'.join(list(reply)) for reply in Replies]
-description = [summarise(tweet) for tweet in str_Tweets]
-
+# to erase and re write the database:
+# r.flushdb()
+# import concurrent.futures
+# with concurrent.futures.ThreadPoolExecutor() as executor:
+#      executor.map(set_database, users)
 
 
 @app.route('/', methods=['GET'])
@@ -57,67 +39,70 @@ def index():
 
 @app.route('/process', methods=['POST'])
 def process():
-    username = request.form['selected_value']
-    user_index = users.index(username)
-
-    # tweets:
-    query = f"(from:{username}) since:{until} -filter:replies"
-    newtweets = get_data(query)['rawContent']
-    alltweets = '\n'.join(newtweets) + str_Tweets[user_index]
-    # replies:
-    rquery = f"(to:{username}) since:{until}"
-    newreplies = get_rdata(rquery)['rawContent']
-    allreplies = '\n'.join(newreplies) + str_Replies[user_index]
-
-    # Return a JSON response containing the data
+    user = request.form['selected_value']
+    pipe = r.pipeline()
+    pipe.get(f'{user}:str_allTweets')
+    pipe.get(f'{user}:str_allReplies')
+    pipe.get(f'{user}:description')
+    pipe.lrange(f'{user}:pol_sentiment_tw', 0, -1)
+    pipe.lrange(f'{user}:pol_sentiment_rp', 0, -1)
+    pipe.get(f'{user}:mean_metric')
+    pipe.lrange(f'{user}:Replies_username', 0, -1)
+    results = pipe.execute()
+    sent_deci = f'Sentiment of the whole Account is {check_polarity(float(results[5]))} with metric {float(results[5]):.2f}'  
+    active_counts = Counter(results[6]).most_common(5)
+    active = [x[0] for x in active_counts]
     return jsonify({
-        'tweets': alltweets,
-        'replies': allreplies,
-        'description': description[user_index],
-        'tw_sentiment': str_sentiment_tw[user_index],
-        'rp_sentiment': str_sentiment_rp[user_index],
-        'sent_deci': sentiment_decision[user_index],
-        'active': active_user[user_index]
+        'tweets': results[0],
+        'replies': results[1],
+        'description': results[2],
+        'tw_sentiment': '\n'.join(list(results[3])),
+        'rp_sentiment': '\n'.join(list(results[4])),
+        'sent_deci': sent_deci,
+        'active': '\n'.join(active)
     })
 
 
-@app.route('/accounts/')
+@app.route('/accounts')
 def get_accounts():
     return json.dumps(users)
 
 
-@app.route('/accounts/<username>/tweets')
+@app.route('/tweets/<username>')
 def tweet(username):
-    query = f"(from:{username}) since:{until} -filter:replies"
-    newtweets = get_data(query)['rawContent']
-    alltweets = list(newtweets) + list(Tweets[users.index(username)])
-    return json.dumps(alltweets)
+    tweets = r.lrange(f'{username}:Tweets', 0, -1)
+    return json.dumps(tweets)
 
 
-@app.route('/accounts/<username>/audience')
+@app.route('/replies/<username>')
 def reply(username):
-    rquery = f"(to:{username}) since:{until}"
-    newreplies = get_rdata(rquery)['rawContent']
-    allreplies = list(newreplies) + list(Replies[users.index(username)])
-    return json.dumps(allreplies)
+    replies = r.lrange(f'{username}:Replies', 0, -1)
+    return json.dumps(replies)
 
 
-@app.route('/accounts/<username>/counter')
-def mycount(username):
-    answer = active_user[users.index(username)]
-    return answer
+@app.route('/audience/<username>')
+def audience(username):
+    audience = r.lrange(f'{username}:Replies_username', 0, -1)
+    return json.dumps(audience)
 
 
-@app.route('/accounts/<username>/sentiment')
-def sentiment(username):
-    answer = json.dumps(list(sentiment_tw[users.index(username)]))
-    return answer
+@app.route('/activeaudience/<username>')
+def active_a(username):
+    audience = r.lrange(f'{username}:Replies_username', 0, -1)
+    active_audience = Counter(audience).most_common(5)
+    return json.dumps(active_audience)
 
 
-@app.route('/accounts/<username>/audience/sentiment')
-def sentiment2(username):
-    answer = json.dumps(list(sentiment_rp[users.index(username)]))
-    return answer
+@app.route('/tweetsentiment/<username>')
+def sentiment_t(username):
+    tweet_sentiment = r.lrange(f'{username}:pol_sentiment_tw', 0, -1)
+    return json.dumps(tweet_sentiment)
+
+
+@app.route('/replysentiment/<username>')
+def sentiment_r(username):
+    reply_sentiment = r.lrange(f'{username}:pol_sentiment_rp', 0, -1)
+    return json.dumps(reply_sentiment)
 
 
 if __name__ == '__main__':

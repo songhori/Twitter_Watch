@@ -20,6 +20,6 @@ def check_polarity(num):
 def sentiment_analyzer(text):
     cleaned_text = clear_text(text)
     metric = analyzer.polarity_scores(cleaned_text)['compound']
-    polarity = check_polarity(metric)
-    result = {'polarity': polarity, 'metric':metric}
-    return result
+    # polarity = check_polarity(metric)
+    # result = {'polarity': polarity, 'metric':metric}
+    return metric
