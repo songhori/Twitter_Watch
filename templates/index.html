@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+
+
+<head>
+    <title>Twitter Watch</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="static/style.css?t=123456">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <img src="static/images/twitter_logo.png?t=123456" alt="Twitter Logo" width="40" height="40">
+            <h1>Twitter Watch</h1>
+        </div>
+    </header>
+    <nav>
+        <form id="my-form">
+            <ul>
+                <li>Select Twitter Account:</li>
+                <li><button type="submit" name="selected_value" value="alikarimi_ak8">alikarimi_ak8</button></li>
+                <li><button type="submit" name="selected_value" value="elonmusk">elonmusk</button></li>
+                <li><button type="submit" name="selected_value" value="BarackObama">BarackObama</button></li>
+                <li><button type="submit" name="selected_value" value="taylorlorenz">taylorlorenz</button></li>
+                <li><button type="submit" name="selected_value" value="cathiedwood">cathiedwood</button></li>
+                <li><button type="submit" name="selected_value" value="ylecun">ylecun</button></li>
+            </ul>
+        </form>
+    </nav>
+    <main>
+        <div class="container">
+            <div class="left">
+                <h2>Tweets:</h2>
+                <textarea id="tweets" rows="5" cols="40">{{ tweets }}</textarea>
+                <h2>Tweet Sentiments:</h2>
+                <textarea id="tw_sentiment" rows="5" cols="40">{{ tw_sentiment }}</textarea>
+                <h2>Page Description:</h2>
+                <textarea id="description" rows="5" cols="40">{{ description }}</textarea>
+                <h2>Sentiment Decision:</h2>
+                <textarea id="sent_deci" rows="5" cols="40">{{ sent_deci }}</textarea>
+            </div>
+            <div class="right">
+                <h2>Replies:</h2>
+                <textarea id="replies" rows="5" cols="40">{{ replies }}</textarea>
+                <h2>Audience Sentiments:</h2>
+                <textarea id="rp_sentiment" rows="5" cols="40">{{ rp_sentiment }}</textarea>
+                <h2>Active Audiences:</h2>
+                <textarea id="active" rows="5" cols="40">{{ active }}</textarea>
+            </div>
+        </div>
+    </main>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
