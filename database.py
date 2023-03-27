@@ -1,8 +1,7 @@
 import snscrape.modules.twitter as sntwitter
 import pandas as pd
 from summarise import summarise
-from sentiment import sentiment_analyzer
-from sentiment import check_polarity
+from sentiment import sentiment_analyzer, check_polarity
 import redis
 
 since = "2023-02-01"

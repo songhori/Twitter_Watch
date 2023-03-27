@@ -1,17 +1,30 @@
-const myButtons = document.querySelectorAll('button');
+const myButtons = document.querySelectorAll('.select');
+const form = document.querySelector('#my-form');
+
 myButtons.forEach((myButton) => {
   myButton.addEventListener('click', () => {
-    // Remove the active class from all buttons
     myButtons.forEach((button) => {
       button.classList.remove('active');
     });
-    // Add the active class to the clicked button
     myButton.classList.add('active');
   });
 });
 
+function copyToClipboard(textarea_id, span_id) {
+  var textarea = document.getElementById(textarea_id);
+  var text = textarea.value;
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      document.getElementById(span_id).textContent = "Copied!";
+      setTimeout(function() {
+        document.getElementById(span_id).innerHTML = '<i class="fa-solid fa-copy"></i>';
+      }, 3000);
+    })
+    .catch(err => {
+      console.error('Failed to copy text: ', err);
+    });
+}
 
-const form = document.querySelector('#my-form');
 form.addEventListener('submit', event => {
     event.preventDefault();
     const selected_value = event.submitter.value;
@@ -24,7 +37,6 @@ form.addEventListener('submit', event => {
     })
     .then(response => response.json())
     .then(data => {
-        // Update page content based on response data
         for (const key in data) {
             const element = document.querySelector(`#${key}`);
             if (element) {

@@ -4,13 +4,12 @@ import json
 import redis
 from sentiment import check_polarity
 from database import set_database
-
+import concurrent.futures
 
 
 app = Flask(__name__)
 
-users = ['alikarimi_ak8', 'elonmusk', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
-# users = ['elonmusk']
+users = ['alikarimi_ak8', 'BarackObama', 'taylorlorenz', 'cathiedwood', 'ylecun']
 
 
 r = redis.Redis(
@@ -20,14 +19,12 @@ r = redis.Redis(
   decode_responses=True)
 
 
+# to erase and re write the database:
+# r.flushdb()
 # keys_to_delete = r.keys("elonmusk:*")
 # if len(keys_to_delete) > 0:
 #     r.delete(*keys_to_delete)
 
-
-# to erase and re write the database:
-# r.flushdb()
-# import concurrent.futures
 # with concurrent.futures.ThreadPoolExecutor() as executor:
 #      executor.map(set_database, users)
 

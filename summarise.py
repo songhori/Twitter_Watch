@@ -20,12 +20,6 @@ from nltk.stem import PorterStemmer
 from heapq import nlargest
 
 
-
-
-
-
-
-
 stop_words = set(stopwords.words('english'))
 stemmer = PorterStemmer()
 
