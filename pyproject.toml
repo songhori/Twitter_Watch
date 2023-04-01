@@ -12,6 +12,8 @@ vaderSentiment = "^3.3.2"
 pandas = "^1.5.3"
 nltk = "^3.8.1"
 redis = "^4.5.3"
+Flask-Compress = "^1.13"
+Flask-APScheduler = "^1.12.4"
 
 [tool.poetry.dev-dependencies]
 debugpy = "^1.6.2"

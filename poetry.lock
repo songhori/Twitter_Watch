@@ -1,4 +1,29 @@
 [[package]]
+name = "apscheduler"
+version = "3.10.1"
+description = "In-process task scheduler with Cron-like capabilities"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+pytz = "*"
+six = ">=1.4.0"
+tzlocal = ">=2.0,<3.0.0 || >=4.0.0"
+
+[package.extras]
+doc = ["sphinx", "sphinx-rtd-theme"]
+gevent = ["gevent"]
+mongodb = ["pymongo (>=3.0)"]
+redis = ["redis (>=3.0)"]
+rethinkdb = ["rethinkdb (>=2.4.0)"]
+sqlalchemy = ["sqlalchemy (>=1.4)"]
+testing = ["pytest", "pytest-asyncio", "pytest-cov", "pytest-tornado5"]
+tornado = ["tornado (>=4.3)"]
+twisted = ["twisted"]
+zookeeper = ["kazoo"]
+
+[[package]]
 name = "async-timeout"
 version = "4.0.2"
 description = "Timeout context manager for asyncio programs"
@@ -20,6 +45,14 @@ soupsieve = ">1.2"
 [package.extras]
 html5lib = ["html5lib"]
 lxml = ["lxml"]
+
+[[package]]
+name = "brotli"
+version = "1.0.9"
+description = "Python bindings for the Brotli compression library"
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "certifi"
@@ -96,6 +129,31 @@ Werkzeug = ">=2.2.2"
 [package.extras]
 async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
+
+[[package]]
+name = "flask-apscheduler"
+version = "1.12.4"
+description = "Adds APScheduler support to Flask"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+apscheduler = ">=3.2.0,<4.0.0"
+flask = ">=0.10.1"
+python-dateutil = ">=2.4.2"
+
+[[package]]
+name = "flask-compress"
+version = "1.13"
+description = "Compress responses in your Flask app with gzip, deflate or brotli."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+brotli = "*"
+flask = "*"
 
 [[package]]
 name = "idna"
@@ -332,6 +390,17 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "pytz-deprecation-shim"
+version = "0.1.0.post0"
+description = "Shims to make deprecation of pytz easier"
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,>=2.7"
+
+[package.dependencies]
+tzdata = {version = "*", markers = "python_version >= \"3.6\""}
+
+[[package]]
 name = "redis"
 version = "4.5.3"
 description = "Python client for Redis database and key-value store"
@@ -485,6 +554,29 @@ slack = ["slack-sdk"]
 telegram = ["requests"]
 
 [[package]]
+name = "tzdata"
+version = "2023.3"
+description = "Provider of IANA time zone data"
+category = "main"
+optional = false
+python-versions = ">=2"
+
+[[package]]
+name = "tzlocal"
+version = "4.3"
+description = "tzinfo object for the local timezone"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+pytz-deprecation-shim = "*"
+tzdata = {version = "*", markers = "platform_system == \"Windows\""}
+
+[package.extras]
+devenv = ["black", "check-manifest", "flake8", "pyroma", "pytest-cov", "pytest-mock (>=3.3)", "pytest (>=4.3)", "zest.releaser"]
+
+[[package]]
 name = "ujson"
 version = "5.7.0"
 description = "Ultra fast JSON encoder and decoder for Python"
@@ -549,11 +641,13 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10.0,<3.11"
-content-hash = "0adc3a5c443654b64abeea8c087ab1ff44bcfe9d4d443f084503ede72f9f896f"
+content-hash = "d7d3487179546849adb45bf8d6c99de5609ec07a49822d174189e718307329fe"
 
 [metadata.files]
+apscheduler = []
 async-timeout = []
 beautifulsoup4 = []
+brotli = []
 certifi = []
 charset-normalizer = []
 click = []
@@ -561,6 +655,8 @@ colorama = []
 debugpy = []
 filelock = []
 flask = []
+flask-apscheduler = []
+flask-compress = []
 idna = []
 itsdangerous = []
 jedi = []
@@ -581,6 +677,7 @@ python-dateutil = []
 python-lsp-jsonrpc = []
 pytoolconfig = []
 pytz = []
+pytz-deprecation-shim = []
 redis = []
 regex = []
 replit-python-lsp-server = []
@@ -592,6 +689,8 @@ soupsieve = []
 toml = []
 tomli = []
 tqdm = []
+tzdata = []
+tzlocal = []
 ujson = []
 urllib3 = []
 vadersentiment = []

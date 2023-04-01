@@ -10,7 +10,7 @@ header {
 	align-items: center;
 	justify-content: center;
 	padding: 0;
-	height: 5vw;
+	height: 4vw;
 	font-size: 1vw;
 }
 
@@ -41,12 +41,12 @@ ul {
 }
 
 .ul-text {
-	margin-right: 4vw;
+	width: 20%;
 }
 
 .ul-profile {
 	display: flex;
-	margin-right: 17vw;
+	width: 78%;
 }
 
 li {
@@ -148,8 +148,8 @@ textarea:focus {
 }
 
 .profile-pic {
-    width: 8vw;
-    height: 8vw;
+    width: 6.5vw;
+    height: 6.5vw;
     border-radius: 50%;
     overflow: hidden;
     display: inline-block;
